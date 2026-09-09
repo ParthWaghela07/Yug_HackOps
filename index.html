@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memora — Personalized Voice & Text AI Companion with Dual-Layer Memory</title>
+  <meta name="description" content="Memora: PS4 Hackathon MVP companion with explainable dual-layer memory, context reduction evaluation, and voice layer STT/TTS.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="logo-container">
+      <div class="logo-badge">M</div>
+      <div class="logo-text">
+        <h1>Memora</h1>
+        <p>Personalized Companion • Explainable Dual-Layer Memory</p>
+      </div>
+    </div>
+
+    <!-- Header Action Buttons -->
+    <div class="header-actions">
+      <button id="btn-load-demo" class="btn btn-primary" title="Load Alex persona 12-turn study conversation">
+        ⚡ Load Demo Conversation
+      </button>
+      <button id="btn-load-music" class="btn btn-accent-teal" title="Enrich memory vault with Spotify music preferences">
+        🎵 Music Context
+      </button>
+      <button id="btn-load-social" class="btn btn-accent-amber" title="Enrich memory vault with mock social context">
+        🌐 Social Context
+      </button>
+      <button id="btn-reset-data" class="btn btn-danger" title="Clear all local data and memory vault">
+        🔄 Reset Data
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Body Layout -->
+  <main class="app-body">
+
+    <!-- Left: Chat Panel -->
+    <section class="chat-section">
+      <!-- Chat History Container -->
+      <div id="chat-history" class="chat-history" aria-label="Conversation history">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="prompt-chips-bar" aria-label="Quick prompt suggestions">
+        <span style="font-size: 0.72rem; color: var(--text-dim); align-self: center; font-weight: 600;">Quick Prompts:</span>
+        <button class="chip" data-prompt="I'm anxious about studying tonight. What should I do?">
+          “I’m anxious about studying tonight. What should I do?”
+        </button>
+        <button class="chip" data-prompt="What's my exam schedule and focus routine?">
+          “What’s my exam schedule and focus routine?”
+        </button>
+        <button class="chip" data-prompt="Can you remind me what music I like for studying?">
+          “Can you remind me what music I like for studying?”
+        </button>
+      </div>
+
+      <!-- Chat Input Form & Voice Controls -->
+      <div class="chat-input-bar">
+        <!-- Live Voice Status Indicator -->
+        <div id="voice-status-bar" class="voice-status-bar" style="display: none;">
+          <div class="voice-dot"></div>
+          <span>Listening (en-IN)... Speak now!</span>
+        </div>
+
+        <form id="chat-form" class="input-row">
+          <!-- Voice Microphone Button -->
+          <button type="button" id="btn-mic" class="btn-mic" title="Voice Input (Click to speak in en-IN)">
+            🎤
+          </button>
+
+          <!-- Text Input -->
+          <input 
+            type="text" 
+            id="chat-input" 
+            class="chat-input" 
+            placeholder="Talk to Memora (type or click 🎤 to speak)..."
+            autocomplete="off" 
+            required 
+          />
+
+          <!-- Send Button -->
+          <button type="submit" id="btn-send" class="btn btn-primary">
+            Send ➔
+          </button>
+        </form>
+
+        <!-- Voice Settings Footer -->
+        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim);">
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <input type="checkbox" id="toggle-auto-speak" style="accent-color: var(--primary);">
+            <span>🔊 Auto-speak assistant responses (Text-to-Speech)</span>
+          </label>
+          <span>STT: Web Speech API (en-IN)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Side Panel (Memory Vault, Explainability, Context Evaluation) -->
+    <aside class="side-panel">
+      <!-- Tabs Navigation -->
+      <nav class="tabs-header">
+        <button id="tab-btn-vault" class="tab-btn active" data-tab="vault">
+          🧠 Vault
+        </button>
+        <button id="tab-btn-explain" class="tab-btn" data-tab="explain">
+          💡 Why?
+        </button>
+        <button id="tab-btn-eval" class="tab-btn" data-tab="eval">
+          📊 Metrics
+        </button>
+        <button id="tab-btn-music" class="tab-btn" data-tab="music">
+          🎵 Mood Music
+        </button>
+      </nav>
+
+      <!-- Tab 1: Memory Vault -->
+      <div id="tab-vault" class="tab-content active">
+        <div style="margin-bottom: 12px;">
+          <h3 style="font-size: 0.92rem; font-weight: 700; color: var(--text-main);">Dual-Layer Memory Vault</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Persisted user facts, goals, preferences, and emotional signals.</p>
+        </div>
+
+        <!-- Factual Memory Layer -->
+        <div class="memory-layer-title">
+          <span>📌 Factual Memory Layer</span>
+        </div>
+        <div id="factual-layer">
+          <!-- Factual memory cards rendered dynamically -->
+        </div>
+
+        <!-- Emotional & Style Memory Layer -->
+        <div class="memory-layer-title" style="margin-top: 24px;">
+          <span>💜 Emotional & Style Memory Layer</span>
+        </div>
+        <div id="emotional-layer">
+          <!-- Emotional memory cards rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Why This Response? (Explainability) -->
+      <div id="tab-explain" class="tab-content">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Tab 3: Context Evaluation Dashboard -->
+      <div id="tab-eval" class="tab-content">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Tab 4: Mood Music (Spotify API Integration) -->
+      <div id="tab-music" class="tab-content">
+        <div style="margin-bottom: 14px;">
+          <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main);">Mood Music Suggestions</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Powered by Spotify Search API (Client Credentials Flow)</p>
+        </div>
+
+        <!-- Preset Mood Selectors -->
+        <div class="mood-chips-grid">
+          <button class="mood-chip-btn active" data-mood="focused">
+            <span>🧠</span> Focused
+          </button>
+          <button class="mood-chip-btn" data-mood="calm">
+            <span>😌</span> Calm
+          </button>
+          <button class="mood-chip-btn" data-mood="happy">
+            <span>😃</span> Happy
+          </button>
+          <button class="mood-chip-btn" data-mood="sad">
+            <span>😢</span> Sad
+          </button>
+          <button class="mood-chip-btn" data-mood="energetic">
+            <span>⚡</span> Energetic
+          </button>
+          <button class="mood-chip-btn" data-mood="anxious">
+            <span>🌊</span> Anxious
+          </button>
+          <button class="mood-chip-btn" data-mood="angry">
+            <span>😤</span> Intense
+          </button>
+          <button class="mood-chip-btn" data-mood="romantic">
+            <span>💖</span> Romantic
+          </button>
+        </div>
+
+        <!-- Custom Mood Search Form -->
+        <form id="mood-search-form" style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <input 
+            type="text" 
+            id="mood-input" 
+            class="chat-input" 
+            placeholder="Type custom mood (e.g. synthwave, lo-fi, acoustic)..."
+            style="padding: 8px 12px; font-size: 0.82rem;"
+          />
+          <button type="submit" class="btn btn-primary" style="padding: 8px 14px;">
+            Search ➔
+          </button>
+        </form>
+
+        <!-- Mood Track Results Container -->
+        <div id="mood-tracks-container">
+          <!-- Tracks rendered dynamically -->
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Load Master App Bundle -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

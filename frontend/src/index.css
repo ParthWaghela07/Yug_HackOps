@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.ink.600') transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: theme('colors.ink.600');
+  border-radius: 999px;
+}
+
+:focus-visible {
+  outline: 2px solid theme('colors.amber.400');
+  outline-offset: 2px;
+}
+
+body {
+  background: radial-gradient(ellipse at top, #171b21 0%, #0b0d10 60%);
+  min-height: 100vh;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 154, 63, 0.45); }
+  50% { box-shadow: 0 0 0 14px rgba(217, 154, 63, 0); }
+}
+.mic-pulse {
+  animation: mic-pulse 1.6s ease-out infinite;
+}
